@@ -1,0 +1,18 @@
+void do_one_thing(int *pnum_times)
+{
+  	int i, j, x;
+
+  	pthread_mutex_lock(&r3_mutex);
+  	if (r3 > 0) {
+     		x  =  r3;
+     		r3--;
+  	} else {
+     		x  =  1;
+  	}
+  	pthread_mutex_unlock(&r3_mutex);
+  	for (i = 0;  i < 4; i++) {
+    		printf("doing one thing\n");
+    		for (j = 0; j < 10000; j++) x = x + i;
+    			(*pnum_times)++;
+  	}
+}
