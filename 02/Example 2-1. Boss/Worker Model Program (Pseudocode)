@@ -1,0 +1,26 @@
+int main()	/* The boss */
+{
+   	forever {
+            	get a request
+            	switch request
+            	case X : pthread_create( ... taskX)
+            	case Y : pthread_create( ... taskY)
+            	.
+            	.
+            	.
+   	}
+}
+void *taskX() 	/* Workers processing requests of type X */
+{
+   	perform the task, synchronize as needed if accessing shared resources
+   	done
+}
+
+void *taskY() 	/* Workers processing requests of type Y */
+{
+  	perform the task, synchronize as needed if accessing shared resources
+   	done
+}
+.
+.
+.
