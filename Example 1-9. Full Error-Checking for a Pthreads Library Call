@@ -7,7 +7,7 @@ if (rtn = pthread_create(...)) {
 	/* error has occurred */
     	fprintf(stderr,"Error: pthread_create, ");
     	if (rtn == EAGAIN)
-       		fprintf(stderr,"Insufficent resources\n");
+       		fprintf(stderr,"Insufficient resources\n");
        	else if (rtn == EINVAL)
                	fprintf(stderr, "Invalid arguments\n");
     	exit(1);
