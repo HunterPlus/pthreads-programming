@@ -1,0 +1,31 @@
+#include <stdio.h>
+#define ARRAY_SIZE 3
+
+typedef int matrix_t[ARRAY_SIZE][ARRAY_SIZE];
+matrix_t MA = {{3, 8, 4}, {2, 5, 9}, {10, 6, 5}};
+matrix_t MB = {{5, 12, 3}, {6, 8, 11}, {6, 3, 2}};
+matrix_t MC;
+
+void mult(int size, int row, int column, matrix_t MA, matrix_t MB, matrix_t MC) 
+{       	
+    MC[row][column] = 0;
+    for(int position = 0; position < size; position++) 
+        MC[row][column] +=  MA[row][position]  *  MB[position][column];     
+}
+
+int main(void) 
+{
+    int size = ARRAY_SIZE, row, column;
+    
+    for(row = 0; row < size; row++)     
+        for (column = 0; column < size; column++) 
+            mult(size, row, column, MA, MB, MC);  
+
+    printf("MATRIX: The resulting matrix C is:\n");
+    for(row = 0; row < size; row ++) {
+        for (column = 0; column < size; column++) 
+            printf("%5d ",MC[row][column]);        
+      	printf("\n");
+    }
+    return 0;
+}
