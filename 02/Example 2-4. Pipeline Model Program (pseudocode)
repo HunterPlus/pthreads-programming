@@ -1,0 +1,37 @@
+int main()
+{
+    	pthread_create( ... stage1 )
+    	pthread_create( ... stage2 )
+    	.
+    	.
+    	.
+    	wait for all pipeline threads to finish
+    	do any clean up
+}
+
+void *stage1()
+{
+   	forever {
+           	get next input for the program
+           	do stage 1 processing of the input
+           	pass result to next thread in pipeline
+ 	}
+}
+
+void *stage2()
+{
+	forever {
+           	get input from previous thread in pipeline
+           	do stage 2 processing of the input
+           	pass result to next thread in pipeline
+      	}
+}
+
+void *stageN()
+{
+   	forever {
+           	get input from previous thread in pipeline
+           	do stage N processing to the input
+           	pass result to program output
+    	}
+}
