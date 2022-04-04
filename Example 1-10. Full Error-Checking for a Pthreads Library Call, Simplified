@@ -1,0 +1,12 @@
+#include <string.h>
+#include <stdio.h>
+.
+.
+.
+if (rtn = pthread_create(...))
+   	fprintf(stderr, "Error: pthread_create, %s\n", strerror(rtn)), exit(1);
+
+/* no error */
+.
+.
+.
