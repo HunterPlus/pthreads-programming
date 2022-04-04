@@ -1,0 +1,25 @@
+int main()
+{
+   	pthread_create( ... thread1 ... task1 )
+   	pthread_create( ... thread2 ... task2 )
+   	.
+   	.
+   	.
+   	signal all workers to start
+   	wait for all workers to finish
+   	do any clean up
+}
+
+void *task1()
+{
+   	wait for start
+   	perform task, synchronize as needed if accessing shared resources
+   	done
+}
+
+void *task2()
+{
+   	wait for start
+   	perform task, synchronize as needed if accessing shared resources
+   	done
+}
