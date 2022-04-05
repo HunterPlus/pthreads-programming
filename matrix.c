@@ -25,9 +25,9 @@ int main()
     pool = thr_pool_create(nthreads);
     for (int i = 0; i < 2; i++) {
         v = malloc(sizeof(*v));
-        v->m1 = m1[i] + 0;
+        v->m1 = &m1[i][0];
         v->m2 = &m2[0][0];
-        v->to = m3[i] + 0;
+        v->to = &m3[i][0];
         v->K = 2;
         v->N = 3;
         //mul_worker(v);
