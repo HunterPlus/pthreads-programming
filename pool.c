@@ -89,7 +89,7 @@ void thr_pool_wait(thr_pool_t *pool)
 {
     pthread_mutex_lock(&pool->mutex);
     
-    while (!pool->stop && pool->active || pool->stop && pool->nthreads)
+    while (!pool->stop && pool->active || pool->stop && pool->nthreads || pool->head != NULL)
         pthread_cond_wait(&pool->waitcond, &pool->mutex);
     pthread_mutex_unlock(&pool->mutex);
 }
