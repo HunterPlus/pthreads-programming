@@ -20,7 +20,7 @@ struct thr_pool {
     pthread_mutex_t mutex;
     pthread_cond_t  workcond;
     pthread_cond_t  waitcond;
-    int             *active;
+    int             active;
     job_t           *head;
     job_t           *tail;
     int             nthreads;
