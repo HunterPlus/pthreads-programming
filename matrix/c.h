@@ -38,4 +38,7 @@ struct job_arg {
     int     K;
     int     N;          /* vector vb's matrix cols  */
 };
+void mtx_mul(double *a, double *b, double *c, int M, int K, int N);
 void thr_mtx_mul(double *, double *, double *, int, int, int, thr_pool_t *);
+void *mtx_create(int nrows, int ncols);
+void mtx_rand(double *mtx, int n);
