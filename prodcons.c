@@ -32,9 +32,7 @@ void *consume(void *arg)
 }
 void Pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start)(void *), (void *)arg)
 {
-	int n;
-	
-	if ((n = pthread_create(thread, NULL, start, arg)) != 0) {
+	if (pthread_create(thread, NULL, start, arg) != 0) {
 		fprintf(stderr, "thread create error.\n");
 		exit;
 	}
