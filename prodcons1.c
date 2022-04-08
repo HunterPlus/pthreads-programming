@@ -33,13 +33,13 @@ int main(int argc, char *argv[])
 		count[i] = 0;
 		Pthread_create(&tid_produce[i], NULL, produce, &count[i]);		
 	}
+	Pthread_create(&tid_consume, NULL, consume, NULL);
+	
+	/* wait for all produces and consume thread */
 	for (i = 0; i < nthreads; i++) {
 		pthread_join(tid_produce[i], NULL);
 		printf("count[%d] = %d\n", i, count[i]);
-	}
-	
-	/* start, then wait for the consume thread */
-	Pthread_create(&tid_consume, NULL, consume, NULL);
+	}	
 	pthread_join(tid_consume, NULL);
 	return 0;	
 }
@@ -58,13 +58,28 @@ void *produce(void *arg)
 		*((int *) arg) += 1;
 	}
 }
+
+void consume_wait(int i)
+{
+	while (1) {
+		pthread_mutex_lock(&shared.mutex);
+		if (i < shared.nput) {
+			pthread_mutex_unlock(&shared.mutex);
+			return ;	/* an item is ready */
+		}
+		pthread_mutex_unlock(&shared.mutex);
+	}
+}
+
 void *consume(void *arg)
 {
 	int i;
 	
-	for (int i = 0; i < nitems; i++)
+	for (int i = 0; i < nitems; i++) {
+		consume_wait(i);
 		if (shared.buff[i] != i)
 			printf("buffer[%d] = %d\n", i, shared.buff[i]);
+	}
 	return NULL;
 }
 void Pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start)(void *), void *arg)
