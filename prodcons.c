@@ -20,7 +20,28 @@ struct {
 
 int main(int argc, char *argv[])
 {
+	int i, nthreads, count[MAXNTHREADS];
+	pthread_t tid_produce[MAXNTHREADS], tid_consume;
 	
+	if (argc ! = 3) {
+		fprintf(stderr, "arguments error.\n");
+		exit(1);
+	}
+	nitems = min(atoi(argv[1]), MAXNITEMS);
+	nthreads = min(atoi(argv[2]), MAXNTHREADS);
+	for (i = 0; i < nthreads; i++) {
+		count[i] = 0;
+		Pthread_create(&tid_produce[i], NULL, produce, &count[i]);		
+	}
+	for (i = 0; i < nthreads; i++) {
+		pthreads_join(tid_produce[i], NULL);
+		printf("count[%d] = %d\n", i, count[i]);
+	}
+	
+	/* start, then wait for the consume thread */
+	Pthread_create(&tid_consume, NULL, consume, NULL);
+	pthread_join(tid_consume, NULL);
+	return 0;	
 }
 void *produce(void *arg)
 {
