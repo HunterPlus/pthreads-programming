@@ -45,7 +45,16 @@ int main(int argc, char *argv[])
 }
 void *produce(void *arg)
 {
-	
+	pthread_mutex_lock(&shared.mutex);
+	if (shared.nput >= nitems)  {
+		pthread_mutex_unlock(&shared.mutex);
+		return NULL;
+	}
+	shared.buff[shared.nput] = shared.nval;
+	shared.nput++;
+	shared.nval++;
+	pthread_mutex_unlock(&shared.mutex);
+	*((int *) arg) += 1;
 }
 void *consume(void *arg)
 {
