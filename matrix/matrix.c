@@ -1,6 +1,6 @@
 #include "c.h"
 
-static struct job_arg *wrap_arg(int *va, int *vb, int *to, int K, int N)
+static struct job_arg *wrap_arg(double *va, double *vb, double *to, int K, int N)
 {
     struct job_arg *arg = malloc(sizeof(*arg));
     
@@ -24,7 +24,8 @@ static void *thr_vector_mul(void *job_arg)
     free(arg);
 }
 
-void thr_mtx_mul(int *a, int *b, int *c, int M, int K, int N, thr_pool_t *pool)
+/* a: M x K,  b: K x N,  c: M x N */
+void thr_mtx_mul(double *a, double *b, double *c, int M, int K, int N, thr_pool_t *pool)
 {
     int i, j;
     struct job_arg *arg;
@@ -37,3 +38,4 @@ void thr_mtx_mul(int *a, int *b, int *c, int M, int K, int N, thr_pool_t *pool)
         }
     return ;
 }
+
