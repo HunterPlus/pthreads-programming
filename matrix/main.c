@@ -5,7 +5,7 @@
 
 void printmtx(double *mtx, int m, int n);
 
-int nthreads = 4;
+int nthreads = 8;
 int main(int argc, char *argv[])
 {
     int nrows, ndims, ncols;
