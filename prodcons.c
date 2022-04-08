@@ -5,7 +5,7 @@
 #define min(a,b) (((a)<(b))?(a):(b))
 #define MAXNITEMS	1000000
 #define MAXNTHREADS	50
-void Thread_create(pthread_t *, pthread_attr_t *, void *(*)(void *), void *);
+void Pthread_create(pthread_t *, pthread_attr_t *, void *(*)(void *), void *);
 void *produce(void *), *consume(void *);
 
 int nitems;	/* read only by produce and consume */
