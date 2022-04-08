@@ -58,7 +58,12 @@ void *produce(void *arg)
 }
 void *consume(void *arg)
 {
+	int i;
 	
+	for (int i = 0; i < nitems; i++)
+		if (shared.buff[i] != i)
+			printf("buffer[%d] = %d\n", i, shared.buffer[i]);
+	return NULL;
 }
 void Pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start)(void *), (void *)arg)
 {
