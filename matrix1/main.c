@@ -25,17 +25,17 @@ int main(int argc, char *argv[])
     
     mtx_rand(mtx1, nrows * ndims);
     mtx_rand(mtx2, ndims * ncols);
-/*
+
     printf("matrix 1:\n");
     printmtx(mtx1, nrows, ndims);
     printf("\nmatrix 2:\n");
     printmtx(mtx2, ndims, ncols);
- */    
+     
     start = clock();
     mtx_mul(mtx1, mtx2, mtx3, nrows, ndims, ncols);
     end = clock();
     printf("\nmatrix 3:\tuse time %ld\n", end - start);
-    //printmtx(mtx3, nrows, ncols);
+    printmtx(mtx3, nrows, ncols);
     
     thr_pool_t  *pool;
     pool = thr_pool_create(nthreads);
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     thr_pool_wait(pool);
     
     printf("\nmatrix 3 with multi threads:\tuse time %ld\n", end - start);
-    //printmtx(mtx3, nrows, ncols);
+    printmtx(mtx3, nrows, ncols);
 
     thr_pool_destroy(pool);
 	free(mtx1);
@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
 
 void printmtx(double *mtx, int m, int n)
 {
-    for (int i = 0; i < m; i++) {
-        for (int j = 0; j < n; j++) 
+    for (int i = 0; i < 10 && i < m; i++) {
+        for (int j = 0; j < 10 && j < n; j++) 
             printf("%9.4f", *(mtx + i * n + j));
         printf("\n");
     }
