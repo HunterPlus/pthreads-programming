@@ -32,10 +32,10 @@ struct thr_pool {
  */
  
 struct job_arg {
-    int     *va;        /* 1 * K vector     */
-    int     *vb;        /* K * 1 vector     */
-    int     *to;        /* vector mul result    */
+    double     *va;        /* 1 * K vector     */
+    double     *vb;        /* K * 1 vector     */
+    double     *to;        /* vector mul result    */
     int     K;
     int     N;          /* vector vb's matrix cols  */
 };
-void thr_mtx_mul(int *, int *, int *, int, int, int, thr_pool_t *);
+void thr_mtx_mul(double *, double *, double *, int, int, int, thr_pool_t *);
