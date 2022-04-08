@@ -16,7 +16,7 @@ static struct job_arg *wrap_arg(double *va, double *vb, double *to, int K, int N
 static void *thr_vector_mul(void *job_arg)
 {
     struct job_arg *arg = job_arg;
-    int sum = 0;
+    double sum = 0;
     
     for (int i = 0; i < arg->K; i++)
         sum += arg->va[i] * arg->vb[i * arg->N];
@@ -33,9 +33,43 @@ void thr_mtx_mul(double *a, double *b, double *c, int M, int K, int N, thr_pool_
     for (i = 0; i < M; i++)
         for (j = 0; j < N; j++) {
             arg = wrap_arg(a + i * K, b + j, c + i * N + j, K, N);
-            //thr_vector_mul(arg);
             thr_pool_queue(pool, thr_vector_mul, arg);   
         }
     return ;
 }
+void mtx_mul(double *a, double *b, double *c, int M, int K, int N)
+{
+    int i, j;
+    struct job_arg *arg;
+    
+    for (i = 0; i < M; i++)
+        for (j = 0; j < N; j++) {
+            arg = wrap_arg(a + i * K, b + j, c + i * N + j, K, N);
+            thr_vector_mul(arg);
+        }
+    return ;
+}
 
+
+void *mtx_create(int nrows, int ncols)
+{
+    double *mtx;
+    
+    mtx = calloc(nrows * ncols, sizeof(*mtx));
+    if (mtx == NULL) {
+        fprintf(stderr, "matrix create error.\n");
+        exit(1);
+    }
+    return mtx;
+}
+void mtx_rand(double *mtx, int n)
+{
+    int mode, num;
+    
+    mode = 10000;
+    srand(time(0));
+    while (--n >= 0) {
+        num = rand() % mode;
+        mtx[n] = 1.0 * num / mode;
+    }
+}
