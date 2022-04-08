@@ -1,7 +1,7 @@
 #include "c.h"
 
 #define min(a,b) (((a)<(b))?(a):(b))
-#define MAXDIMS 50
+#define MAXDIMS 5000
 
 void printmtx(double *mtx, int m, int n);
 
