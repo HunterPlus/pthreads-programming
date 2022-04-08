@@ -39,10 +39,10 @@ int main(int argc, char *argv[])
     thr_pool_t  *pool;
     pool = thr_pool_create(nthreads);
     start = clock();
-    thr_mtx_mul(mtx1, mtx2, mtx3, nrows, ndims, ncols, pool);
-    end = clock();
+    thr_mtx_mul(mtx1, mtx2, mtx3, nrows, ndims, ncols, pool);    
     thr_pool_wait(pool);
-    
+    end = clock();
+	
     printf("\nmatrix 3 with multi threads:\tuse time %ld\n", end - start);
     //printmtx(mtx3, nrows, ncols);
 
