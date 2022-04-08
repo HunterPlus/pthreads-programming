@@ -1,7 +1,7 @@
 #include "c.h"
 
 #define min(a,b) (((a)<(b))?(a):(b))
-#define MAXDIMS 5000
+#define MAXDIMS 1000
 
 void printmtx(double *mtx, int m, int n);
 
@@ -48,11 +48,12 @@ int main(int argc, char *argv[])
     //printmtx(mtx3, nrows, ncols);
 
     thr_pool_destroy(pool);
+	free(mtx1);
+	free(mtx2);
+	free(mtx3);
     
     return 0;
 }
-
-
 
 void printmtx(double *mtx, int m, int n)
 {
