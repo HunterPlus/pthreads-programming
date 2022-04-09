@@ -52,6 +52,34 @@ int main(int argc, char *argv[])
 	return 0;	
 }
 
+void *produce(void *arg)
+{
+	while (1) {
+		pthread_mutex_lock(&put.mutex);
+		if (put.nput >= nitems) {
+			pthread_mutex_unlock(&put.mutex);
+			return NULL;
+		}
+		buff[put.nput] = nval;
+		put.nput++;
+		put.nnval++;
+		pthread_mutex_unlock(&put.mutex);
+		
+		pthread_mutex_loc(&nready.mutex);
+		if (nready.nready == 0)
+			pthread_cond_signal(&nready.cond);
+		nready.nready++;
+		pthread_mutex_unlock(&put.mutex);
+		
+		*((int *) arg) += 1;
+	}
+}
+
+void *consume(void *arg)
+{
+	int	i;
+	
+}
 
 void Pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start)(void *), void *arg)
 {
