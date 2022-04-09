@@ -23,7 +23,7 @@ struct {
 	pthread_cond_t		cond;
 	int	nready;
 } nready = {
-	PTHREAD_MUTEX_INITIALIZAER, PTHREAD_COND_INITIALIZER
+	PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER
 };
 
 int main(int argc, char *argv[])
