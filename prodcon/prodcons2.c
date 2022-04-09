@@ -79,6 +79,17 @@ void *consume(void *arg)
 {
 	int	i;
 	
+	for (i = 0; i < nitems; i++) {
+		pthread_mutex_lock(&nready.mutex);
+		if (nready->nready == 0)
+			pthread_cond_wait(&nready.cond, &nready.mutex);
+		nready.nready--;
+		pthread_mutex_unlock(&nready.mutex);
+		
+		if (buff[i] != i)
+			printf("buff[%d] = %d\n", i, buff[i]);
+	}
+	reuturn NULL;
 }
 
 void Pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start)(void *), void *arg)
