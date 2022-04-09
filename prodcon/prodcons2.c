@@ -15,7 +15,7 @@ struct {
 	int 	nput;
 	int	nval;
 } put = {
-	PTHREAD_MUTEX_INITIALIZAER
+	PTHREAD_MUTEX_INITIALIZER
 };
 
 struct {
@@ -60,12 +60,12 @@ void *produce(void *arg)
 			pthread_mutex_unlock(&put.mutex);
 			return NULL;
 		}
-		buff[put.nput] = nval;
+		buff[put.nput] = put.nval;
 		put.nput++;
-		put.nnval++;
+		put.nval++;
 		pthread_mutex_unlock(&put.mutex);
 		
-		pthread_mutex_loc(&nready.mutex);
+		pthread_mutex_lock(&nready.mutex);
 		if (nready.nready == 0)
 			pthread_cond_signal(&nready.cond);
 		nready.nready++;
@@ -81,7 +81,7 @@ void *consume(void *arg)
 	
 	for (i = 0; i < nitems; i++) {
 		pthread_mutex_lock(&nready.mutex);
-		if (nready->nready == 0)
+		if (nready.nready == 0)
 			pthread_cond_wait(&nready.cond, &nready.mutex);
 		nready.nready--;
 		pthread_mutex_unlock(&nready.mutex);
@@ -89,7 +89,7 @@ void *consume(void *arg)
 		if (buff[i] != i)
 			printf("buff[%d] = %d\n", i, buff[i]);
 	}
-	reuturn NULL;
+	return NULL;
 }
 
 void Pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start)(void *), void *arg)
