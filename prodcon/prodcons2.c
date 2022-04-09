@@ -51,3 +51,12 @@ int main(int argc, char *argv[])
 	pthread_join(tid_consume, NULL);
 	return 0;	
 }
+
+
+void Pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*start)(void *), void *arg)
+{
+	if (pthread_create(thread, attr, start, arg) != 0) {
+		fprintf(stderr, "thread create error.\n");
+		exit(1);
+	}
+}
