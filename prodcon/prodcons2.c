@@ -66,7 +66,7 @@ void *produce(void *arg)
 		pthread_mutex_unlock(&put.mutex);
 		
 		pthread_mutex_lock(&nready.mutex);
-		while (nready.nready == 0)
+		if (nready.nready == 0)
 			pthread_cond_signal(&nready.cond);
 		nready.nready++;
 		pthread_mutex_unlock(&nready.mutex);
@@ -81,7 +81,7 @@ void *consume(void *arg)
 	
 	for (i = 0; i < nitems; i++) {
 		pthread_mutex_lock(&nready.mutex);
-		if (nready.nready == 0)
+		while (nready.nready == 0)
 			pthread_cond_wait(&nready.cond, &nready.mutex);
 		nready.nready--;
 		pthread_mutex_unlock(&nready.mutex);
