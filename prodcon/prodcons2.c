@@ -69,7 +69,7 @@ void *produce(void *arg)
 		if (nready.nready == 0)
 			pthread_cond_signal(&nready.cond);
 		nready.nready++;
-		pthread_mutex_unlock(&put.mutex);
+		pthread_mutex_unlock(&nready.mutex);
 		
 		*((int *) arg) += 1;
 	}
