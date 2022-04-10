@@ -84,3 +84,27 @@ int pthread_rwlock_tryrdlock(pthread_rwlock_t *rw)
 	
 	return (result);
 }
+
+int pthread_rwlock_wrlock(pthread_rwlock_t *rw)
+{
+	int	result;
+	
+	if (rw->rw_magic != RW_MAGIC)
+		return (EINVAL);
+	
+	if ((result = pthread_mutex_lock(&rw_mutex)) != 0)
+		return (result);
+	
+	while (rw->refcount != 0) {
+		rw->rwnwaitwriters++;
+		result = pthread_cond_wait(rw->rw_condwriters, &rw->rw_mutex);
+		rw->rwnwaitwriters--;
+		if (result != 0)
+			break;
+	}
+	if (result == 0)
+		rw->rw_refcount = -1;
+	pthread_mutex_unlock(&rw->rw_mutex);
+	
+	return (result);
+}
