@@ -130,4 +130,27 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t *rw)
 
 int pthread_rwlock_unlock(pthread_rwlock_t *rw)
 {
+	int	result;
+	
+	if (rw->rw_magic != RW_MAGIC)
+		return (EINVAL);
+	
+	if ((result = pthread_mutex_lock(&rw->rw_mutex)) != 0)
+		return (result);
+	
+	if (rw->rw_refcount > 0)
+		rw->refcount--;
+	else if (rw->rw_refcount == -1)
+		rw->refcount = 0;
+	else
+		fprintf(stderr, "rwunlock err: rw_refcount = %d\n", rw->rw_refcount);
+	
+	if (rw->rw_nwaitwriters > 0) {
+		if (rw->rw_refcount == 0)
+			result = pthread_cond_signal(&rw->rw_condwriters);
+	} else if (rw->rw_nwaitreaders > 0)
+		result = pthread_cond_broadcast(&rw->rw_condreaders);
+	
+	pthread_mutex_unlock(&rw->rw_mutex);
+	return (result);
 }
