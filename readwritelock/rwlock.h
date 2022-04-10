@@ -18,6 +18,7 @@ typedef int pthread_rwlockattr_t;	/* dummy, not supported */
 int pthread_rwlock_init(pthread_rwlock_t *, pthread_rwlockattr_t *);
 int pthread_rwlock_destroy(pthread_rwlock_t *);
 int pthread_rwlock_rdlock(pthread_rwlock_t *);
-int pthread_rwlock_rdunlock(pthread_rwlock_t *);
 int pthread_rwlock_wrlock(pthread_rwlock_t *);
-int pthread_rwlock_wrunlock(pthread_rwlock_t *);
+int pthread_rwlock_unlock(pthread_rwlock_t *);
+
+
