@@ -117,7 +117,7 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t *rw)
 		return (EINVAL);
 	
 	if ((result = pthread_mutex_lock(&rw->rw_mutex)) != 0)
-		return (EBUSY);
+		return (result);
 
 	if (rw->rw_refcount != 0)
 		return (EBUSY);
@@ -126,4 +126,8 @@ int pthread_rwlock_trywrlock(pthread_rwlock_t *rw)
 	pthread_mutex_unlock(&rw->rw_mutex);
 	
 	return (result);
+}
+
+int pthread_rwlock_unlock(pthread_rwlock_t *rw)
+{
 }
