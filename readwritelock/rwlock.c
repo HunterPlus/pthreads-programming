@@ -42,3 +42,22 @@ int pthread_rwlock_destroy(pthread_rwlock_t *rw)
 	
 	return 0;
 }
+
+int pthread_rwlock_rdlock(pthread_rwlock_t *rw)
+{
+	int	result;
+	
+	if (rw->rw_magic != RW_MAGIC)
+		return (EINVAL);
+	
+	if ((result = pthread_mutex_lock(&rw->rw_mutex)) != 0)
+		return result;
+	
+	while (rw->rw_recound < 0 || rw->rw_nwaitwriters > 0) {
+		rw->rw_nwaitreaders++;
+		result = pthread_cond_wait(&rw->rw_condreaders, &rw->rw_mutex);
+		rw->rw_nwaitreaders--;
+		if (result != 0)
+			break;
+	}
+}
