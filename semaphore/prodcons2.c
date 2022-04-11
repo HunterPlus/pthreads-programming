@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 	int	i, prodcount[MAXNTHREADS], conscount[MAXNTHREADS];
 	pthread_t tid_produce[MAXNTHREADS], tid_consume[MAXNTHREADS];
 	
-	if (argc ! = 4) {
+	if (argc != 4) {
 		fprintf(stderr, "usage: prodcons2 <#items> <#producers> <#consumers>\n");
 		exit(1);
 	}
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 		pthread_create(&tid_produce[i], NULL, produce, &prodcount[i]);
 	}
 	for (i = 0; i < nconsumers; i++) {
-		consount[i] = 0;
+		conscount[i] = 0;
 		pthread_create(&tid_consume[i], NULL, consume, &conscount[i]);
 	}
 	
