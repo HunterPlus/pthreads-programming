@@ -64,3 +64,50 @@ int main(int argc, char *argv[])
 	
 	return 0;
 }
+
+void *produce(void *arg)
+{
+	while (1) {
+		sem_wait(&shared.nempty);
+		sem_wait(&shared.mutex);
+		
+		if (shared.nput >= nitems) {			
+			sem_post(&shared.nstored);
+			sem_post(&shared.nempty);
+			sem_post(&shared.mutex);
+			return NULL;
+		}		
+		shared.buff[shared.nput % NBUFF] = shared.nputval;
+		shared.nput++;
+		shared.nputval++;
+		
+		sem_post(&shared.mutex);
+		sem_post(&shared.nstored);		
+		*((int *) arg) += 1;		
+	}
+}
+
+void *consume(void *arg)
+{
+	int	i;
+	
+	while (1) {
+		sem_wait(&shared.nstored);
+		sem_wait(&shared.mutex);
+		
+		if (shared.nget >= nitems) {
+			sem_post(&shared.nstored);
+			sem_post(&shared.mutex);
+			return NULL;
+		}
+		i = shared.nget % NBUFF;
+		if (shared.buff[i] != shared.ngetval)
+			printf("error: buff[%d] = %d\n", i, shared.buff[i]);
+		shared.nget++;
+		shared.ngetval++;
+		
+		sem_post(&shared.mutex);
+		sem_post(&shared.nempty);
+		*((int *) arg) += 1;
+	}
+}
