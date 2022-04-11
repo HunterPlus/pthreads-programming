@@ -40,10 +40,10 @@ int main(int argc, char *argv[])
 	pthread_create(&tid_consume, NULL, consume, NULL);
 	
 	for (i = 0; i < nproducers; i++) {
-		pthread_join(tid_produce[i]);
+		pthread_join(tid_produce[i], NULL);
 		printf("count[%d] = %d\n", i, count[i]);
 	}
-	pthread_join(tid_consume);
+	pthread_join(tid_consume, NULL);
 	
 	sem_destroy(&shared.mutex);
 	sem_destroy(&shared.nempty);
