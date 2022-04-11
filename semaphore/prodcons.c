@@ -38,3 +38,32 @@ int main(int argc, char *argv[])
 	sem_destroy(&shared.nstored);
 	return 0;
 }
+
+void *produce(void *arg)
+{
+	int	i;
+	
+	for (i = 0; i < nitems; i++) {
+		sem_wait(&shared.nempty);	/* wait for at least 1 empty slot */
+		sem_wait(&shared.mutex);
+		shared.buff[i % NBUFF] = i;
+		shared_post(&shared.mutex);
+		sem_post(&shared.nstored);	/* 1 more stored item */
+	}
+	return NULL;
+}
+
+void *consume(void *arg)
+{
+	int	i;
+	
+	for (i = 0; i < nitems; i++) {
+		sem_wait(&shared.nstored);	/* wait for at least 1 stored item */
+		sem_wait(&shared.mutex);
+		if (shared.buff[i % NBUFF] != i)
+			printf("buff[%d] = %d\n", i, shared.buff[i % NBUFF]);
+		sem_post(&shared.mutex);
+		sem_post(&shared.nempty);	/* 1 more empty slot */
+	}
+	return NULL;
+}
