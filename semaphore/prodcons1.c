@@ -51,3 +51,41 @@ int main(int argc, char *argv[])
 	
 	return 0;
 }
+
+void *produce(void *arg)
+{
+	while (1) {
+		sem_wait(&shared.nempty);	/* wait for at least 1 slot */
+		sem_wait(&shared.mutex);
+		
+		if (shared.nput >= nitems) {
+			sem_post(&shared.nempty);
+			sem_post(&shared.nmutex);
+			return NULL;
+		}
+		shared.buff[shared.nput % NBUFF] = shared.nval;
+		shared.nput++;
+		shared.nval++;
+		
+		sem_post(&shared.mutex);
+		sem_post(&shared.nstored);	/* 1 more stored item */
+		*((int *) arg) += 1;
+	}
+}
+
+void *consume(void *arg)
+{
+	int	i;
+	
+	for (i = 0; i < nitems; i++) {
+		sem_wait(&shared.nstored);	/* wait for at least 1 stored item */
+		sem_wait(&shared.mutex);
+		
+		if (shared.buff[i % NBUFF] != i)
+			printf("error: buff[%d] = %d\n", i, shared.buff[i % NBUFF]);
+		
+		sem_post(&shared.mutex);
+		sem_post(&shared.nempty);	/* 1 more empty slot */
+	}
+	return NULL;
+}
