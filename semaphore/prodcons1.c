@@ -26,5 +26,28 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "usage prodcons1 <#items> <#producers>\n");
 		exit(1);
 	}
-	nitems = atoi(argv[1]);			     
+	nitems = atoi(argv[1]);	
+	nproducers = min(atoi(argv[2]), MAXNTHREADS);
+	
+	sem_int(&shared.mutex, 0, 1);
+	sem_int(&shared.nempty, 0, NBUFF);
+	sem_int(&shared.nstored, 0, 0);
+	
+	for (i = 0; i < nproducers; i++) {
+		count[i] = 0;
+		pthread_create(&tid_produce[i], NULL, produce, &count[i]);
+	}
+	pthread_create(&tid_consume, NULL, consume, NULL);
+	
+	for (i = 0; i < nproducers; i++) {
+		pthread_join(tid_produce[i]);
+		printf("count[%d] = %d\n", i, count[i]);
+	}
+	pthread_join(tid_consume);
+	
+	sem_destroy(&shared.mutex);
+	sem_destroy(&shared.nempty);
+	sem_destroy(&shared.nstored);
+	
+	return 0;
 }
