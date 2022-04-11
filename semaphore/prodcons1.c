@@ -7,7 +7,7 @@
 #define	MAXNTHREADS	100
 #define min(a,b)	(((a) < (b)) ? (a) : (b))
 
-int 	nitems, nproducer;
+int 	nitems, nproducers;
 struct {
 	int	buff[NBUFF];
 	int	nput;
@@ -26,6 +26,5 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "usage prodcons1 <#items> <#producers>\n");
 		exit(1);
 	}
-	nitems = atoi(argv[1]);
-	nproducers = min(atoi([argv[2]), MAXNTHREADS);
+	nitems = atoi(argv[1]);			     
 }
