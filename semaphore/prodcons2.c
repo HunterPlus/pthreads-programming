@@ -49,5 +49,18 @@ int main(int argc, char *argv[])
 		pthread_create(&tid_consume[i], NULL, consume, &conscount[i]);
 	}
 	
+	for (i = 0; i < nproducers; i++) {
+		pthread_join(tid_produce[i], NULL);
+		printf("producer count[%d] = %d\n", i, prodcount[i]);
+	}
+	for (i = 0; i < nconsumers; i++) {
+		pthread_join(tid_consume[i], NULL);
+		printf("consumer count[%d] = %d\n", i, conscount[i]);
+	}
 	
+	sem_destroy(&shared.mutex);
+	sem_destroy(&shared.nempty);
+	sem_destroy(&shared.nstored);
+	
+	return 0;
 }
