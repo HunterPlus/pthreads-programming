@@ -28,10 +28,10 @@ int main(int argc, char *argv[])
 	sem_init(&shared.nstored, 0, 0);
 	
 	pthread_create(&tid_produce, NULL, produce, NULL);
-	pthread_create(&tie_consume, NULL, consume, NULL);
+	pthread_create(&tid_consume, NULL, consume, NULL);
 	
-	pthread_join(&tid_produce, NULL);
-	pthread_join(&tid_consume, NULL);
+	pthread_join(tid_produce, NULL);
+	pthread_join(tid_consume, NULL);
 	
 	sem_destroy(&shared.mutex);
 	sem_destroy(&shared.nempty);
@@ -47,7 +47,7 @@ void *produce(void *arg)
 		sem_wait(&shared.nempty);	/* wait for at least 1 empty slot */
 		sem_wait(&shared.mutex);
 		shared.buff[i % NBUFF] = i;
-		shared_post(&shared.mutex);
+		sem_post(&shared.mutex);
 		sem_post(&shared.nstored);	/* 1 more stored item */
 	}
 	return NULL;
