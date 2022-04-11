@@ -1,3 +1,5 @@
+/* Multiple Producers, One Consumer */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -11,7 +13,7 @@ int 	nitems, nproducers;
 struct {
 	int	buff[NBUFF];
 	int	nput;
-	int	nval;
+	int	nputval;
 	sem_t	mutex, nempty, nstored;
 } shared;
 
@@ -63,9 +65,9 @@ void *produce(void *arg)
 			sem_post(&shared.mutex);
 			return NULL;
 		}
-		shared.buff[shared.nput % NBUFF] = shared.nval;
+		shared.buff[shared.nput % NBUFF] = shared.nputval;
 		shared.nput++;
-		shared.nval++;
+		shared.nputval++;
 		
 		sem_post(&shared.mutex);
 		sem_post(&shared.nstored);	/* 1 more stored item */
