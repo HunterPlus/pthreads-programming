@@ -11,7 +11,7 @@ int 	nitems, nproducers;
 struct {
 	int	buff[NBUFF];
 	int	nput;
-	int	nvalue;
+	int	nval;
 	sem_t	mutex, nempty, nstored;
 } shared;
 
@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
 	nitems = atoi(argv[1]);	
 	nproducers = min(atoi(argv[2]), MAXNTHREADS);
 	
-	sem_int(&shared.mutex, 0, 1);
-	sem_int(&shared.nempty, 0, NBUFF);
-	sem_int(&shared.nstored, 0, 0);
+	sem_init(&shared.mutex, 0, 1);
+	sem_init(&shared.nempty, 0, NBUFF);
+	sem_init(&shared.nstored, 0, 0);
 	
 	for (i = 0; i < nproducers; i++) {
 		count[i] = 0;
@@ -60,7 +60,7 @@ void *produce(void *arg)
 		
 		if (shared.nput >= nitems) {
 			sem_post(&shared.nempty);
-			sem_post(&shared.nmutex);
+			sem_post(&shared.mutex);
 			return NULL;
 		}
 		shared.buff[shared.nput % NBUFF] = shared.nval;
