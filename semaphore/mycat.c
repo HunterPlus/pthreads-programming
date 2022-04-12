@@ -47,3 +47,25 @@ int main(int argc, char *argv[])
 	
 	return 0;
 }
+
+void *produce(void *arg)
+{
+	int	i;
+	
+	for (i = 0; ;) {
+		sem_wait(&shared.nempty);
+		
+		sem_wait(&shared.mutex);
+			/* critical region */
+		sem_post(&shared.mutex);
+		
+		shared.buff[i].n = read(fd, shared.buff[i].data, BUFFSIZ);
+		if (shared.buff[i].n == 0) {
+			sem_post(&shared.nstored);
+			return NULL;
+		}
+		if (++i >= NBUFF)
+			i = 0;
+		sem_post(&shared.nstored);		
+	}
+}
