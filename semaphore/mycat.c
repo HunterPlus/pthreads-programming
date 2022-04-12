@@ -85,7 +85,7 @@ void *consume(void *arg)
 		
 		if (shared.buff[i].n == 0)
 			return NULL;
-		write(0, shared.buff[i].data, shared.buff[i].n);
+		write(1, shared.buff[i].data, shared.buff[i].n);
 		if (++i >= NBUFF)
 			i = 0;
 		
