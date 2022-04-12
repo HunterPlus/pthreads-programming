@@ -69,3 +69,24 @@ void *produce(void *arg)
 		sem_post(&shared.nstored);		
 	}
 }
+
+void *consume(void *)
+{
+	int	i;
+	
+	for (i = 0; ;) {
+		sem_wait(&shared.nstored);
+		
+		sem_wait(&shared.mutex);
+			/* critical region */
+		sem_post(&shared.mutex);
+		
+		if (shared.buff[i].n == 0)
+			return NULL;
+		write(stdout, shared.buff[i].data, shared.buff[i].n);
+		if (++i >= NBUFF)
+			i = 0;
+		
+		sem_post(&shared.nempty);
+	}
+}
