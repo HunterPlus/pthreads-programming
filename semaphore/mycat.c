@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
 
@@ -9,7 +11,7 @@
 
 struct {				/* data shared by producer and consumer */
 	struct {
-		char data[BUFFSIZ];	/* a buffer */
+		char data[BUFSIZ];	/* a buffer */
 		ssize_t	n;		/* count of #bytes in the buffer */
 	} buff[NBUFF];			/* NBUFF of these buffers/counts */
 	sem_t	mutex, nempty, nstored;	/* semaphores, not pointers */
@@ -20,7 +22,7 @@ void	*produce(void *), *consume(void *);
 
 int main(int argc, char *argv[])
 {
-	pthread_t tid_procude, tid_consume;
+	pthread_t tid_produce, tid_consume;
 	
 	if (argc != 2) {
 		fprintf(stderr, "usage: mycat <pathname>");
@@ -33,7 +35,7 @@ int main(int argc, char *argv[])
 	
 	sem_init(&shared.mutex, 0, 1);
 	sem_init(&shared.nempty, 0, NBUFF);
-	sem_init(&shared.ntored, 0, 0);
+	sem_init(&shared.nstored, 0, 0);
 	
 	pthread_create(&tid_produce, NULL, produce, NULL);	/* read thread */
 	pthread_create(&tid_consume, NULL, consume, NULL);	/* write thread */
@@ -59,7 +61,7 @@ void *produce(void *arg)
 			/* critical region */
 		sem_post(&shared.mutex);
 		
-		shared.buff[i].n = read(fd, shared.buff[i].data, BUFFSIZ);
+		shared.buff[i].n = read(fd, shared.buff[i].data, BUFSIZ);
 		if (shared.buff[i].n == 0) {
 			sem_post(&shared.nstored);
 			return NULL;
@@ -70,7 +72,7 @@ void *produce(void *arg)
 	}
 }
 
-void *consume(void *)
+void *consume(void *arg)
 {
 	int	i;
 	
@@ -83,7 +85,7 @@ void *consume(void *)
 		
 		if (shared.buff[i].n == 0)
 			return NULL;
-		write(stdout, shared.buff[i].data, shared.buff[i].n);
+		write(0, shared.buff[i].data, shared.buff[i].n);
 		if (++i >= NBUFF)
 			i = 0;
 		
